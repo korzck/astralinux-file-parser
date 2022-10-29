@@ -6,13 +6,10 @@ print()
 mytime = time.time()
 hours = 0
 minutes = 0
-hours = floor(round(time.time() - mytime)/3600)
-minutes = floor(round(time.time() - mytime)/60) - hours*60
-seconds = round(time.time() - mytime) - minutes*60
 def statusprint(*args, size=0, **kwargs):
     hours = floor(round(time.time() - mytime)/3600)
     minutes = floor(round(time.time() - mytime)/60) - hours*60
-    seconds = round(time.time() - mytime) - minutes*60
+    seconds = round(time.time() - mytime) - minutes*60 - hours*3600
     
     # sys.stdout.write("\033[F")
     print(*args, **kwargs)
