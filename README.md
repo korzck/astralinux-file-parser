@@ -6,3 +6,4 @@ requests
 bs4
 lxml
 ```
+![](https://github.com/korzck/astralinux_file_parser/blob/main/code.gif)
