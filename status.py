@@ -9,10 +9,7 @@ minutes = 0
 hours = floor(round(time.time() - mytime)/3600)
 minutes = floor(round(time.time() - mytime)/60) - hours*60
 seconds = round(time.time() - mytime) - minutes*60
-def empty_print():
-    print()
-    sys.stdout.write("\033[F")
-def status_print(*args, size=0, **kwargs):
+def statusprint(*args, size=0, **kwargs):
     hours = floor(round(time.time() - mytime)/3600)
     minutes = floor(round(time.time() - mytime)/60) - hours*60
     seconds = round(time.time() - mytime) - minutes*60

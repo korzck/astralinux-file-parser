@@ -1,3 +1,4 @@
+import time
 import requests
 import bs4
 import os
@@ -29,7 +30,11 @@ class Memory:
         return str(self.byteSize)+" B"
 
 def list_links(url):
-    result = requests.get(url)
+    start_time = time.time()
+    try:
+        result = requests.get(url, timeout=1)
+    except:
+        result = requests.get(url)
     soup = bs4.BeautifulSoup(result.text, "lxml")
     tbody = soup.find("tbody")
     tr = tbody.find_all("tr")
@@ -56,7 +61,7 @@ def calc_size(url, num_of_spaces=0):
 
     
 
-url = "https://dl.astralinux.ru/astra/testing/orel/iso/"
+url = "https://dl.astralinux.ru/astra/"
 calc_size(url)
 print(size)
 
