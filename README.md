@@ -6,4 +6,8 @@ requests
 bs4
 lxml
 ```
+Size calculation example
+
 ![](https://github.com/korzck/astralinux_file_parser/blob/main/code.gif)
+
+To change loading directory you need to change `ulr` variable in `main.py` to correct path
