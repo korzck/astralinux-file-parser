@@ -1,43 +1,50 @@
 import requests
 import bs4
 import os
+import time
+import size
+import status
+import urllib.request
 
-def list_links(url):
-    result = requests.get(url)
-    soup = bs4.BeautifulSoup(result.text, "lxml")
-    tbody = soup.find("tbody")
-    tr = tbody.find_all("tr")
-    links = []
-    for i in tr:
-        link = i.find("td", {"class":"link"}).find("a").get("href")
-        size = i.find("td", {"class":"size"}).text
-        links.append({"name":link, "size":size})
-    
-    return links[1:]    
+memory = size.Memory()
+url = "https://dl.astralinux.ru/astra/testing/orel/repository/pool/smb-heimdal/"
 
-
-def build_tree(url, num_of_spaces=0):
-    current_folder = list_links(url)
-    #if link is file
+def download_filesys(url, folder_path, num_of_spaces=1):
+    current_folder = size.list_links(url)
     for link in current_folder:
         if link["size"] != '-':
-            print(num_of_spaces*"  ", link["name"], sep=None)
-    #if link is folder
+            status.status_print(num_of_spaces*"  ", link["name"], link["size"], size=memory, current_file=link["name"]+" "+link["size"], sep=None)
+            memory.add(link["size"])
+            try:
+                urllib.request.urlretrieve(url+link["name"], folder_path+link["name"])
+            except:
+                pass
     for link in current_folder:
         if link["size"] == '-':
-            print(num_of_spaces*"  ",link["name"], ":", sep=None)
-            build_tree(url+link["name"], num_of_spaces+1)
-
-
-url = "https://dl.astralinux.ru/astra/testing/orel/repository/pool/main/b/"
-# for i in list_links(url):
-#     print(i)
-build_tree(url)
-# parent_dir = os.getcwd()
-# print(parent_dir)
-# os.mkdir(os.path.join(parent_dir,url.split('/')[len(url.split('/'))-2]))
+            # checks if folder exists
+            try:
+                new_folder = os.path.join(folder_path, link["name"])
+                os.mkdir(new_folder)
+            except:
+                pass
+            status.status_print(num_of_spaces*"  ",link["name"], ":", size=memory, sep=None)
+            download_filesys(url+link["name"], new_folder, num_of_spaces+1)
 
     
+
+parent_dir = os.getcwd()
+# create base folder 
+base_folder = os.path.join(parent_dir,url.split('/')[len(url.split('/'))-2]+'/')
+try:
+    os.mkdir(base_folder)
+except:
+    pass
+download_filesys(url, base_folder)
+status.status_print(size=memory, sep=None)
+print()
+print()
+    
+
 
 
 

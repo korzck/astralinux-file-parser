@@ -2,7 +2,7 @@ import time
 import requests
 import bs4
 import os
-from status import statusprint
+import status
 
 class Memory:
     def __init__(self):
@@ -29,11 +29,14 @@ class Memory:
             return str(round(self.byteSize/1024**1, 3))+" KiB"
         return str(self.byteSize)+" B"
 
+size = Memory()
+
 def list_links(url):
-    start_time = time.time()
     try:
         result = requests.get(url, timeout=1)
     except:
+        while not requests.get(url):
+            result = requests.get(url)
         result = requests.get(url)
     soup = bs4.BeautifulSoup(result.text, "lxml")
     tbody = soup.find("tbody")
@@ -45,23 +48,22 @@ def list_links(url):
         links.append({"name":link, "size":size})
     return links[1:]    
 
-size = Memory()
 
 
 def calc_size(url, num_of_spaces=0):
     current_folder = list_links(url)
     for link in current_folder:
         if link["size"] != '-':
-            statusprint(num_of_spaces*"  ", link["name"], link["size"] , sep=None, size=size)
+            status.status_print(num_of_spaces*"  ", link["name"], link["size"], size=size, sep=None)
             size.add(link["size"])
     for link in current_folder:
         if link["size"] == '-':
-            statusprint(num_of_spaces*"  ",link["name"], ":", size=size, sep=None)
+            status.status_print(num_of_spaces*"  ",link["name"], ":", size=size, sep=None)
             calc_size(url+link["name"], num_of_spaces+1)
-
+    status.status_print(size=size, sep=None)
     
-
-url = "https://dl.astralinux.ru/astra/"
-calc_size(url)
-print(size)
-
+if __name__ == '__main__':
+    url = "https://dl.astralinux.ru/astra/testing/orel/repository/pool/smb-heimdal/t/"
+    calc_size(url)
+    print(size)
+    print(status.last_status)
