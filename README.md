@@ -5,6 +5,7 @@ This parser prints giant repo tree from dl.astralinux.ru/astra/ and calculates i
 requests
 bs4
 lxml
+urllib.request
 ```
 Size calculation example
 
