@@ -7,7 +7,7 @@ import status
 import urllib.request
 
 memory = size.Memory()
-url = "https://dl.astralinux.ru/astra/testing/orel/repository/pool/smb-heimdal/"
+url = "https://dl.astralinux.ru/astra/"
 
 def download_filesys(url, folder_path, num_of_spaces=1):
     current_folder = size.list_links(url)
@@ -15,10 +15,11 @@ def download_filesys(url, folder_path, num_of_spaces=1):
         if link["size"] != '-':
             status.status_print(num_of_spaces*"  ", link["name"], link["size"], size=memory, current_file=link["name"]+" "+link["size"], sep=None)
             memory.add(link["size"])
-            try:
-                urllib.request.urlretrieve(url+link["name"], folder_path+link["name"])
-            except:
-                pass
+            if not os.path.exists(folder_path+link["name"]):
+                try:
+                    urllib.request.urlretrieve(url+link["name"], folder_path+link["name"])
+                except:
+                    pass
     for link in current_folder:
         if link["size"] == '-':
             # checks if folder exists
