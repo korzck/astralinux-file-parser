@@ -22,7 +22,6 @@ def download_filesys(url, folder_path, num_of_spaces=1):
                     pass
     for link in current_folder:
         if link["size"] == '-':
-            # checks if folder exists
             try:
                 new_folder = os.path.join(folder_path, link["name"])
                 os.mkdir(new_folder)
